@@ -1,8 +1,22 @@
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
-function Header() {
+export default function Header() {
+  const [pageState, setPageState] = useState('Sign In');
   const location = useLocation();
   const navigate = useNavigate();
+  const auth = getAuth();
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setPageState('Profile');
+      } else {
+        setPageState('Sign In');
+      }
+    });
+  }, [auth]);
 
   function pathMatchRoute(route) {
     if (route === location.pathname) {
@@ -24,8 +38,9 @@ function Header() {
         <div>
           <ul className="flex space-x-10">
             <li
-              className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent ${
-                pathMatchRoute('/') && 'text-black border-b-red-500'
+              className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-2 border-b-transparent ${
+                pathMatchRoute('/sign-in') &&
+                'text-black border-b-2 border-b-red-500'
               }`}
               onClick={() => navigate('/')}
             >
@@ -33,7 +48,7 @@ function Header() {
             </li>
             <li
               className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent ${
-                pathMatchRoute('/') && 'text-black border-b-red-500'
+                pathMatchRoute('/sign-in') && 'text-black border-b-red-500'
               }`}
               onClick={() => navigate('/offers')}
             >
@@ -41,11 +56,12 @@ function Header() {
             </li>
             <li
               className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent ${
-                pathMatchRoute('/sign-in') && 'text-black border-b-red-500'
+                (pathMatchRoute('/sign-in') || pathMatchRoute('/profile')) &&
+                'text-black border-b-red-500'
               }`}
               onClick={() => navigate('/sign-in')}
             >
-              Sign In
+              {pageState}
             </li>
           </ul>
         </div>
@@ -53,5 +69,3 @@ function Header() {
     </div>
   );
 }
-
-export default Header;
