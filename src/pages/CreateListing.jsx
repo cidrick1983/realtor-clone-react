@@ -162,6 +162,7 @@ function CreateListing() {
       imgUrls,
       geolocation,
       timestamp: serverTimestamp(),
+      userRef: auth.currentUser.uid,
     };
     delete formDataCopy.images;
     !formDataCopy.offer && delete formDataCopy.discountedPrice;
@@ -183,7 +184,6 @@ function CreateListing() {
       <form onSubmit={onSubmit}>
         <p className="text-lg mt-6 font-semibold">Sell or Rent</p>
         <div className="flex">
-          {/* buttons next to each other */}
           <button
             type="button"
             id="type"

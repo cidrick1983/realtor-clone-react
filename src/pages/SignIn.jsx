@@ -26,6 +26,7 @@ function SignIn() {
 
   async function onSubmit(e) {
     e.preventDefault();
+    // sign in procedure
     try {
       const auth = getAuth();
       const userCredential = await signInWithEmailAndPassword(
